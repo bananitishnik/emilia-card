@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для Эмилии</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            transition: background-color 2s ease;
+        }
+        
+        .initial-container {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            transition: all 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .mysterious-button {
+            margin-top: 30px;
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+        }
+        
+        .mysterious-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(108, 99, 255, 0.4);
+        }
+        
+        .mysterious-button:active {
+            transform: translateY(1px);
+        }
+        
+        .hidden {
+            opacity: 0;
+            visibility: hidden;
+            position: absolute;
+            pointer-events: none;
+        }
+        
+        .flowers {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+        
+        .flower {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff80ab;
+            border-radius: 50%;
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .card {
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+            height: 400px;
+            margin: 20px auto;
+            perspective: 1500px;
+            z-index: 2;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1.5s ease;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 1.5s;
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .card-front {
+            background: linear-gradient(135deg, #f48fb1, #ec407a);
+            transform: rotateY(0deg);
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, #ffebee, #f8bbd0);
+            transform: rotateY(180deg);
+        }
+        
+        .card-title {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .card-image {
+            width: 150px;
+            height: 150px;
+            background-color: #fff;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 72px;
+            color: #ec407a;
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .card-message {
+            font-size: 18px;
+            color: #444;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeIn 2s forwards 3s;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card-signature {
+            font-size: 24px;
+            color: #d81b60;
+            font-style: italic;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 2s forwards 3.5s;
+        }
+        
+        .heart {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #ff4081;
+            transform: rotate(45deg);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .heart:before, .heart:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #ff4081;
+            border-radius: 50%;
+        }
+        
+        .heart:before {
+            top: -15px;
+            left: 0;
+        }
+        
+        .heart:after {
+            top: 0;
+            left: -15px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: rotate(45deg) translate(0, 0); }
+            50% { transform: rotate(45deg) translate(0, -20px); }
+        }
+        
+        .more-button {
+            position: relative;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ff80ab, #c2185b);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            outline: none;
+            opacity: 0;
+            animation: fadeIn 1s forwards 4s;
+        }
+        
+        .more-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .more-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes reveal {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f06292;
+            z-index: 1;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="initial-container" id="initial-container">
+        <h2>Привет, Эмилия!</h2>
+        <p style="margin-top: 20px;">Нажми на кнопку, чтобы открыть сообщение, которое было специально подготовлено для тебя.</p>
+        <button class="mysterious-button" id="reveal-button">Открыть сюрприз</button>
+    </div>
+    
+    <div class="flowers hidden" id="flowers"></div>
+    
+    <div class="card hidden" id="greeting-card">
+        <div class="card-inner" id="card-inner">
+            <div class="card-front">
+                <h1 class="card-title">Эмилия!</h1>
+                <div class="card-image">❀</div>
+                <p style="color: white; font-size: 24px;">С 8 Марта!</p>
+            </div>
+            <div class="card-back">
+                <div class="heart" style="top: 20px; right: 40px;"></div>
+                <div class="heart" style="bottom: 40px; left: 30px;"></div>
+                
+                <h2 style="color: #d81b60; margin-bottom: 20px;">Дорогая Эмилия!</h2>
+                <div class="card-message">
+                    В этот прекрасный весенний день хочу пожелать тебе 
+                    счастья, любви и радости! Ты удивительная и прекрасная, 
+                    как первые весенние цветы. Пусть каждый день дарит тебе 
+                    улыбки и исполнение всех твоих желаний!
+                </div>
+                <div class="card-signature">С любовью от Богдана ❤️</div>
+                <button class="more-button" id="love-button">Нажми на меня</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createFlowers() {
+            const flowersContainer = document.getElementById('flowers');
+            const colors = ['#ff80ab', '#f48fb1', '#f06292', '#ec407a', '#e91e63'];
+            
+            for (let i = 0; i < 50; i++) {
+                const flower = document.createElement('div');
+                flower.className = 'flower';
+                
+                const size = Math.random() * 20 + 10;
+                const posX = Math.random() * 100;
+                const delay = Math.random() * 20;
+                const duration = Math.random() * 10 + 10;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                flower.style.width = `${size}px`;
+                flower.style.height = `${size}px`;
+                flower.style.left = `${posX}%`;
+                flower.style.backgroundColor = color;
+                flower.style.animationDelay = `${delay}s`;
+                flower.style.animationDuration = `${duration}s`;
+                
+                flowersContainer.appendChild(flower);
+            }
+        }
+        
+        function createConfetti() {
+            const colors = ['#ff80ab', '#f48fb1', '#f06292', '#ec407a', '#e91e63', '#ad1457', 
+                          '#f8bbd0', '#ffb6c1', '#ff69b4', '#c71585', '#880e4f', '#ffebee'];
+            const shapes = ['circle', 'square', 'triangle'];
+            
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    
+                    const size = Math.random() * 15 + 5;
+                    const posX = Math.random() * window.innerWidth;
+                    const posY = -50;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                    const duration = Math.random() * 3 + 2;
+                    const delay = Math.random() * 0.5;
+                    
+                    confetti.style.width = `${size}px`;
+                    confetti.style.height = `${size}px`;
+                    confetti.style.left = `${posX}px`;
+                    confetti.style.top = `${posY}px`;
+                    confetti.style.backgroundColor = color;
+                    
+                    if (shape === 'circle') {
+                        confetti.style.borderRadius = '50%';
+                    } else if (shape === 'triangle') {
+                        confetti.style.width = '0';
+                        confetti.style.height = '0';
+                        confetti.style.backgroundColor = 'transparent';
+                        confetti.style.borderLeft = `${size/2}px solid transparent`;
+                        confetti.style.borderRight = `${size/2}px solid transparent`;
+                        confetti.style.borderBottom = `${size}px solid ${color}`;
+                    }
+                    
+                    confetti.style.position = 'fixed';
+                    confetti.style.opacity = '0';
+                    confetti.style.zIndex = '1';
+                    confetti.style.animation = `fall ${duration}s linear forwards ${delay}s`;
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, (duration + delay) * 1000);
+                }, i * 50);
+            }
+        }
+        
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                @keyframes fall {
+                    0% {
+                        opacity: 1;
+                        top: -50px;
+                        transform: translateX(0) rotate(0deg);
+                    }
+                    25% {
+                        opacity: 1;
+                        transform: translateX(100px) rotate(45deg);
+                    }
+                    50% {
+                        opacity: 1;
+                        transform: translateX(-50px) rotate(90deg);
+                    }
+                    75% {
+                        opacity: 1;
+                        transform: translateX(75px) rotate(180deg);
+                    }
+                    100% {
+                        opacity: 0;
+                        top: 100vh;
+                        transform: translateX(-100px) rotate(360deg);
+                    }
+                }
+            </style>
+        `);
+        
+        window.onload = function() {
+            createFlowers();
+            
+            const revealButton = document.getElementById('reveal-button');
+            const initialContainer = document.getElementById('initial-container');
+            const flowers = document.getElementById('flowers');
+            const greetingCard = document.getElementById('greeting-card');
+            const cardInner = document.getElementById('card-inner');
+            
+            revealButton.addEventListener('click', function() {
+                initialContainer.style.opacity = '0';
+                initialContainer.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                
+                document.body.style.backgroundColor = '#fce4ec';
+                
+                setTimeout(function() {
+                    initialContainer.classList.add('hidden');
+                    
+                    flowers.classList.remove('hidden');
+                    flowers.style.opacity = '1';
+                    
+                    greetingCard.classList.remove('hidden');
+                    greetingCard.style.opacity = '1';
+                    greetingCard.style.transform = 'scale(1)';
+                    
+                    createConfetti();
+                    
+                    setTimeout(function() {
+                        cardInner.style.transform = 'rotateY(165deg)';
+                    }, 1000);
+                    
+                }, 500);
+            });
+            
+            const loveButton = document.getElementById('love-button');
+            loveButton.addEventListener('click', function() {
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => {
+                        const heart = document.createElement('div');
+                        heart.className = 'heart';
+                        heart.style.position = 'fixed';
+                        heart.style.left = `${Math.random() * 100}%`;
+                        heart.style.top = `${Math.random() * 100}%`;
+                        heart.style.opacity = '0';
+                        heart.style.animation = `float 6s ease-in-out infinite, fadeIn 0.5s forwards`;
+                        document.body.appendChild(heart);
+                        
+                        setTimeout(() => {
+                            heart.style.animation = 'fadeIn 1s reverse forwards';
+                            setTimeout(() => {
+                                heart.remove();
+                            }, 1000);
+                        }, 5000);
+                    }, i * 100);
+                }
+                
+                loveButton.textContent = 'Я тебя люблю!';
+                
+                createConfetti();
+            });
+        };
+    </script>
+</body>
+</html>
